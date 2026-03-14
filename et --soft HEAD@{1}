@@ -1,0 +1,91 @@
+[33m3ddd8dc[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m HEAD@{0}: reset: moving to HEAD~2
+[33m05dc40f[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{1}: commit: Standardize environment template: rename .env copy to .env.example
+[33mc5ecbcd[m HEAD@{2}: commit: Complete Real-Time Messaging System: Laravel 12, Livewire v3, Cloudinary & Pusher
+[33m3ddd8dc[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m HEAD@{3}: reset: moving to 3ddd8dc379faef113a1a7ef715bd09554b5087db
+[33m406bd48[m HEAD@{4}: rebase (abort): returning to refs/heads/master
+[33m4d2c9ae[m HEAD@{5}: rebase: fast-forward
+[33m48c0ae3[m HEAD@{6}: rebase: fast-forward
+[33md8a9b18[m HEAD@{7}: rebase: fast-forward
+[33mcc179db[m HEAD@{8}: rebase: fast-forward
+[33m4c3ac00[m HEAD@{9}: rebase: fast-forward
+[33m96e4e1f[m HEAD@{10}: rebase: fast-forward
+[33mb308484[m HEAD@{11}: rebase: fast-forward
+[33m5b5d758[m HEAD@{12}: rebase: fast-forward
+[33mccbca44[m HEAD@{13}: rebase: fast-forward
+[33m4d954f9[m HEAD@{14}: rebase: fast-forward
+[33maba565c[m HEAD@{15}: rebase: fast-forward
+[33mefa5313[m HEAD@{16}: rebase: fast-forward
+[33m7527e86[m HEAD@{17}: rebase: fast-forward
+[33mb754869[m HEAD@{18}: rebase: fast-forward
+[33m836c32a[m HEAD@{19}: rebase: fast-forward
+[33m7713bcc[m HEAD@{20}: rebase: fast-forward
+[33mbd03086[m HEAD@{21}: rebase: fast-forward
+[33mb85dc0c[m HEAD@{22}: rebase: fast-forward
+[33mbc954d4[m HEAD@{23}: rebase: fast-forward
+[33mc6408fb[m HEAD@{24}: rebase: fast-forward
+[33m3ddd8dc[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m HEAD@{25}: rebase: fast-forward
+[33m1fe8e73[m HEAD@{26}: rebase (start): checkout 1fe8e7326e73e89ba83373ee66d22ac624470bcd
+[33m406bd48[m HEAD@{27}: rebase (abort): returning to refs/heads/master
+[33mb22c02c[m HEAD@{28}: rebase (pick): changed some settings for photos
+[33m72a10bb[m HEAD@{29}: rebase (pick): added cloudinary for saving photos in production
+[33m011d2b1[m HEAD@{30}: rebase (pick): update
+[33m18a6edd[m HEAD@{31}: rebase (pick): update added layouts
+[33m4a32487[m HEAD@{32}: rebase (pick): update
+[33mf8721d0[m HEAD@{33}: rebase (pick): update deleted echo and reverb and pusher
+[33m7a1042d[m HEAD@{34}: rebase (pick): update
+[33mb69b000[m HEAD@{35}: rebase (pick): update Working Webscoket
+[33mabe1fe3[m HEAD@{36}: rebase (pick): update websockets
+[33m7b3134d[m HEAD@{37}: rebase (pick): Added reverb and vite and tried it out
+[33m07edae6[m HEAD@{38}: rebase (squash): update
+[33m9dfc865[m HEAD@{39}: rebase (squash): # This is a combination of 9 commits.
+[33mf1178b0[m HEAD@{40}: rebase (squash): # This is a combination of 8 commits.
+[33m673e2dd[m HEAD@{41}: rebase (squash): # This is a combination of 7 commits.
+[33m58c0baf[m HEAD@{42}: rebase (squash): # This is a combination of 6 commits.
+[33ma3f5cfe[m HEAD@{43}: rebase (squash): # This is a combination of 5 commits.
+[33m0938629[m HEAD@{44}: rebase (squash): # This is a combination of 4 commits.
+[33me590592[m HEAD@{45}: rebase (squash): # This is a combination of 3 commits.
+[33mcc5b4e6[m HEAD@{46}: rebase (squash): # This is a combination of 2 commits.
+[33mc6408fb[m HEAD@{47}: rebase: fast-forward
+[33m3ddd8dc[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m HEAD@{48}: rebase: fast-forward
+[33mefd42c3[m HEAD@{49}: rebase (start): checkout efd42c31af13ebfa2a224a5b56890a80b856cc89
+[33m406bd48[m HEAD@{50}: rebase (finish): returning to refs/heads/master
+[33m406bd48[m HEAD@{51}: rebase (start): checkout refs/remotes/origin/master
+[33m406bd48[m HEAD@{52}: pull --tags origin master: Merge made by the 'ort' strategy.
+[33m4d2c9ae[m HEAD@{53}: rebase (finish): returning to refs/heads/master
+[33m4d2c9ae[m HEAD@{54}: rebase (start): checkout HEAD~10
+[33m4d2c9ae[m HEAD@{55}: rebase (finish): returning to refs/heads/master
+[33m4d2c9ae[m HEAD@{56}: rebase (pick): changed some settings for photos
+[33m48c0ae3[m HEAD@{57}: rebase (pick): added cloudinary for saving photos in production
+[33md8a9b18[m HEAD@{58}: rebase (squash): update
+[33m65184b7[m HEAD@{59}: rebase (squash): # This is a combination of 6 commits.
+[33m7306dd9[m HEAD@{60}: rebase (squash): # This is a combination of 5 commits.
+[33mf398712[m HEAD@{61}: rebase (squash): # This is a combination of 4 commits.
+[33m003d9a7[m HEAD@{62}: rebase (squash): # This is a combination of 3 commits.
+[33ma1690bd[m HEAD@{63}: rebase (squash): # This is a combination of 2 commits.
+[33m2df69f9[m HEAD@{64}: rebase (start): checkout HEAD~10
+[33m763b2b8[m HEAD@{65}: rebase (finish): returning to refs/heads/master
+[33m763b2b8[m HEAD@{66}: rebase (pick): changed some settings for photos
+[33m3289976[m HEAD@{67}: rebase (pick): added cloudinary for saving photos in production
+[33m1f1f311[m HEAD@{68}: rebase (squash): update
+[33mdb85ab7[m HEAD@{69}: rebase (squash): # This is a combination of 7 commits.
+[33m41de3c4[m HEAD@{70}: rebase (squash): # This is a combination of 6 commits.
+[33m45adc74[m HEAD@{71}: rebase (squash): # This is a combination of 5 commits.
+[33mf8e2ec5[m HEAD@{72}: rebase (squash): # This is a combination of 4 commits.
+[33m6b23f14[m HEAD@{73}: rebase (squash): # This is a combination of 3 commits.
+[33md10e2e3[m HEAD@{74}: rebase (squash): # This is a combination of 2 commits.
+[33m88091af[m HEAD@{75}: rebase (start): checkout HEAD~10
+[33ma56661f[m HEAD@{76}: rebase (finish): returning to refs/heads/master
+[33ma56661f[m HEAD@{77}: rebase (pick): changed some settings for photos
+[33meea9b9b[m HEAD@{78}: rebase (pick): added cloudinary for saving photos in production
+[33mbd0b78b[m HEAD@{79}: rebase (squash): update
+[33m4481aaa[m HEAD@{80}: rebase (squash): # This is a combination of 7 commits.
+[33m77c86cc[m HEAD@{81}: rebase (squash): # This is a combination of 6 commits.
+[33me813da6[m HEAD@{82}: rebase (squash): # This is a combination of 5 commits.
+[33m8a10bb8[m HEAD@{83}: rebase (squash): # This is a combination of 4 commits.
+[33mce37090[m HEAD@{84}: rebase (squash): # This is a combination of 3 commits.
+[33mcb70cb9[m HEAD@{85}: rebase (squash): # This is a combination of 2 commits.
+[33m8c04990[m HEAD@{86}: rebase (start): checkout HEAD~10
+[33mc615f4d[m HEAD@{87}: rebase (finish): returning to refs/heads/master
+[33mc615f4d[m HEAD@{88}: rebase (squash): changed some settings for photos
+[33m8499ca4[m HEAD@{89}: rebase (squash): # This is a combination of 6 commits.
+[33m73c9199[m HEAD@{90}: rebase (squash): # This is a combination of 5 commits.
