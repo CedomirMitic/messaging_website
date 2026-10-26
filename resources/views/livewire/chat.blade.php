@@ -21,7 +21,7 @@
                     $isSelected = $selectedUser && $selectedUser->id === $user->id; 
                 @endphp
 
-                {{-- Added @click="sidebarOpen = false" so it collapses instantly upon selection --}}
+
                 <div wire:click="selectUser({{ $user->id }})" @click="sidebarOpen = false"
                     class="p-3 cursor-pointer flex items-center gap-3 transition-colors {{ $isSelected ? 'bg-blue-600 text-white font-semibold' : 'hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-800 dark:text-neutral-200' }}">
 
@@ -57,7 +57,7 @@
         </div>
     </div>
 
-    {{-- RIGHT SIDE: Chat Window (Takes up full width when sidebar is collapsed) --}}
+    {{-- RIGHT SIDE: Chat Window --}}
     <div class="flex-1 flex flex-col bg-white dark:bg-neutral-800 min-w-0 w-full transition-opacity duration-150"
         wire:loading.class="opacity-50" wire:target="selectUser">
 
@@ -92,14 +92,19 @@
                 </div>
             </div>
 
-            {{-- Messages Container i ostali deo četa ostaje isti... --}}
+            {{-- Messages Container --}}
             <div class="flex-1 p-4 overflow-y-auto custom-scrollbar bg-neutral-50/30 dark:bg-neutral-900/30 flex flex-col space-y-2"
                 id="messages-container" x-init="() => { 
-                                const el = $el; 
-                                requestAnimationFrame(() => { 
-                                    el.scrollTop = el.scrollHeight; 
-                                });
-                            }">
+                                        const el = $el; 
+                                        requestAnimationFrame(() => { 
+                                            el.scrollTop = el.scrollHeight; 
+                                        });
+                                    }">
+
+                @php
+                    // Find the last message sent by the logged-in user in the current conversation collection
+                    $lastAuthMessage = $messages->where('sender_id', auth()->id())->last();
+                @endphp
 
                 @foreach ($messages as $message)
                     <div class="flex w-full mb-1 {{ $message->sender_id === auth()->id() ? 'justify-end' : 'justify-start' }}">
@@ -108,6 +113,17 @@
                                 class="max-w-md px-4 py-2 rounded-2xl shadow-sm text-sm {{ $message->sender_id === auth()->id() ? 'bg-blue-600 text-white' : 'bg-neutral-200 dark:bg-neutral-700 text-neutral-900 dark:text-white' }}">
                                 {{ $message->message }}
                             </div>
+
+                            {{-- Show Read/Sent status ONLY on the absolute last message sent by the auth user --}}
+                            @if ($message->sender_id === auth()->id() && $lastAuthMessage && $message->id === $lastAuthMessage->id)
+                                <span class="text-[10px] text-neutral-400 mt-0.5 px-1">
+                                    @if ($message->read_at)
+                                        <span class="text-blue-500 font-medium">Read</span>
+                                    @else
+                                        <span>Sent</span>
+                                    @endif
+                                </span>
+                            @endif
                         </div>
                     </div>
                 @endforeach
