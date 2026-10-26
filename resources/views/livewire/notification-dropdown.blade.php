@@ -1,5 +1,4 @@
-{{-- There must be only ONE root div and ONE x-data --}}
-<div class="relative" wire:poll.5s x-data="{ open: false }">
+<div class="relative" x-data="{ open: false }">
 
     {{-- Notification Trigger --}}
     <flux:navlist.item icon="bell-alert" @click.prevent="open = !open" class="cursor-pointer relative z-[101]">
@@ -37,13 +36,11 @@
                     class="p-4 border-b dark:border-neutral-700 last:border-0 hover:bg-gray-50 dark:hover:bg-neutral-700/50 transition cursor-default">
                     <p class="text-sm dark:text-neutral-200 leading-tight">
                         @if(isset($notification->data['user_id']))
-                            {{-- Ako postoji ID (nove notifikacije), napravi link --}}
                             <a href="{{ route('profile', ['id' => $notification->data['user_id']]) }}" wire:navigate
                                 class="font-bold text-blue-600 hover:text-blue-800 hover:underline cursor-pointer">
                                 {{ $notification->data['user_name'] ?? 'User' }}
                             </a>
                         @else
-                            {{-- Ako ne postoji ID (stare notifikacije), samo ispiši ime --}}
                             <span class="font-bold text-blue-600">
                                 {{ $notification->data['user_name'] ?? 'User' }}
                             </span>
@@ -65,3 +62,19 @@
         </div>
     </div>
 </div>
+
+@script
+<script>
+    document.addEventListener('livewire:initialized', () => {
+        let userId = @json(auth()->id());
+
+        if (userId) {
+            window.Echo.private(`chat.${userId}`)
+                .listen('.PostLikedEvent', (event) => {
+                    console.log('Stigla notifikacija preko chat kanala:', event);
+                    @this.$refresh();
+                });
+        }
+    });
+</script>
+@endscript

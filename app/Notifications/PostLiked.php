@@ -2,21 +2,21 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use App\Models\Post;
 use App\Models\User;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Notifications\Notification;
 
-class PostLiked extends Notification
+class PostLiked extends Notification implements ShouldBroadcast
 {
     use Queueable;
 
     public $post;
     public $liker;
 
-    /**
-     * Create a new notification instance.
-     */
     public function __construct(Post $post, User $liker)
     {
         $this->post = $post;
@@ -25,11 +25,10 @@ class PostLiked extends Notification
 
     /**
      * Get the notification's delivery channels.
-     * This is the method that was missing!
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return ['database', 'broadcast'];
     }
 
     /**
@@ -38,7 +37,7 @@ class PostLiked extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'user_id' => $this->liker->id, 
+            'user_id' => $this->liker->id,
             'user_name' => $this->liker->name,
             'post_title' => $this->post->title,
             'post_id' => $this->post->id,
@@ -46,8 +45,36 @@ class PostLiked extends Notification
     }
 
     /**
-     * Optional: This also handles the 'database' type if toDatabase is missing
+     * Get the channels the event should broadcast on.
      */
+    public function broadcastOn(): array
+    {
+        return [
+            new PrivateChannel('chat.' . $this->post->user_id),
+        ];
+    }
+
+    /**
+     * Definšemo jasno ime eventa da ga lako uhvatimo na frontendu
+     */
+    public function broadcastAs(): string
+    {
+        return 'PostLikedEvent';
+    }
+
+    /**
+     * Get the broadcastable representation of the notification.
+     */
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+            'user_id' => $this->liker->id,
+            'user_name' => $this->liker->name,
+            'post_title' => $this->post->title,
+            'post_id' => $this->post->id,
+        ]);
+    }
+
     public function toArray($notifiable)
     {
         return [

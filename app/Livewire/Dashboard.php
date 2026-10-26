@@ -3,7 +3,6 @@
 namespace App\Livewire;
 
 use App\Models\Post;
-use App\Models\User;
 use Livewire\Component;
 use App\Models\FriendList;
 use Livewire\Attributes\On;
@@ -18,11 +17,9 @@ class Dashboard extends Component
     use WithFileUploads;
 
     // --- Properties ---
-    public $users;
     public $posts;
     public string $activeTab = 'discover'; // Tracks 'discover' or 'friends'
     public bool $showPostModal = false;
-
 
     /**
      * Initialize the component
@@ -33,24 +30,19 @@ class Dashboard extends Component
     }
 
     /**
-     * Centralized method to load all data based on current state
+     * Centralized method to load posts based on current state
      */
     #[On('post-created')]
     public function loadData()
     {
         $currentUserId = Auth::id();
 
-        // 1. Get IDs of all current friends
+        // Get IDs of all current friends
         $friendIds = FriendList::where('user_id', $currentUserId)
             ->pluck('friend_id')
             ->toArray();
 
-        // 2. Load users for the "Add Friend" grid (People I'm not friends with yet)
-        $this->users = User::where('id', '!=', $currentUserId)
-            ->whereNotIn('id', $friendIds)
-            ->get();
-
-        // 3. Load posts based on the active tab
+        // Load posts based on the active tab
         $postQuery = Post::latest()->with('user');
 
         if ($this->activeTab === 'friends') {
@@ -73,10 +65,12 @@ class Dashboard extends Component
         $this->activeTab = $tab;
         $this->loadData();
     }
+
     public function markAllAsRead()
     {
         auth()->user()->unreadNotifications->markAsRead();
     }
+
     public function render()
     {
         return view('livewire.dashboard');

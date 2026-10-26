@@ -13,37 +13,36 @@
             <x-app-logo />
         </a>
 
-        <flux:navlist variant="outline">
-            <flux:navlist.group :heading="__('Platform')" class="grid">
-                <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')">
+        <flux:navlist>
+            <flux:navlist.group :heading="__('Platform')" class="grid w-full">
+
+                <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
+                    class="w-full">
                     {{ __('Dashboard') }}
                 </flux:navlist.item>
-                <div class="relative inline-block">
 
-                    {{-- Insert global count component layout --}}
-                    @livewire('global-notification-count')
+                <flux:navlist.item icon="users" :href="route('friends')" :current="request()->routeIs('friends')"
+                    class="w-full">
+                    {{ __('Friends') }}
+                </flux:navlist.item>
+                
+                @livewire('global-notification-count')
 
-                    <flux:navlist.item icon="chat-bubble-oval-left-ellipsis" :href="route('chat')"
-                        :current="request()->routeIs('chat')">
-                        {{ __('Chat') }}
-                    </flux:navlist.item>
-                </div>
-
-                <flux:navlist.item icon="user" href="{{ route('profile') }}" {{-- This ensures it stays highlighted even
-                    if there is a user ID in the URL --}} :current="request()->routeIs('profile*')">
+                <flux:navlist.item icon="user" :href="route('profile')" :current="request()->routeIs('profile*')"
+                    class="w-full">
                     {{ __('Profile') }}
                 </flux:navlist.item>
-                @php $unreadCount = auth()->user()->unreadNotifications->count(); @endphp
+
 
                 <!-- Notification section -->
-
                 @livewire('notification-dropdown')
+                <!-- End Notification section -->
 
-                <!--End Notification section -->
             </flux:navlist.group>
         </flux:navlist>
 
         <flux:spacer />
+
         <!-- Desktop User Menu -->
         <flux:dropdown class="hidden lg:block" position="bottom" align="start">
             <flux:profile :name="auth()->user()->name" :initials="auth()->user()->initials()"
@@ -88,9 +87,9 @@
         </flux:dropdown>
     </flux:sidebar>
 
-    <!-- Mobile User Menu -->
-    <flux:header class="lg:hidden">
-        <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
+    <!-- Mobile Header -->
+    <flux:header class="lg:hidden border-b border-zinc-200 dark:border-zinc-700">
+        <flux:sidebar.toggle icon="bars-2" inset="left" />
 
         <flux:spacer />
 

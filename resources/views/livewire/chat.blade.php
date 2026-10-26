@@ -1,145 +1,153 @@
-<div>
-    <div class="relative mb-6 w-full">
-        <flux:heading size="xl" level="1">{{ __('Chat') }}</flux:heading>
-        <flux:subheading size="lg" class="mb-6">{{ __('Lets Chat!') }}</flux:subheading>
-        <flux:separator variant="subtle" />
-    </div>
-    <div class="flex h-[550px] text-sm border rounded-xl shadow overflow-hidden">
-        <div class="w-1/4 border-r bg-blue-600 text-[#e2eafc] flex flex-col">
-            <div class="p-4 font-bold border-b flex-shrink-0">Users</div>
-            <div class="divide-y overflow-y-scroll flex-grow custom-scrollbar">
-                @foreach ($users as $user)
-                    <div wire:click="selectUser({{ $user->id }})"
-                        class="p-3 cursor-pointer hover:bg-blue-800 transition{{ $selectedUser && $selectedUser->id === $user->id ? ' bg-blue-900 rounded-xl font-semibold' : '' }}">
+<div class="flex h-[75vh] text-sm border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-sm overflow-hidden bg-white dark:bg-neutral-800"
+    x-data="{ sidebarOpen: {{ $selectedUser ? 'false' : 'true' }} }">
 
-                        {{-- Unread chat messages count for the user --}}
-                        @if (isset($unreadCounts[$user->id]) && $unreadCounts[$user->id] > 0)
-                            <span class="ml-auto bg-red-500 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
-                                {{ $unreadCounts[$user->id] }}
-                            </span>
-                        @endif
+    {{-- LEFT SIDE: Users List --}}
+    <div class="flex flex-col border-r border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 transition-all duration-300 relative z-20 h-full bg-white dark:bg-neutral-900 flex-shrink-0"
+        :class="sidebarOpen ? 'w-80' : 'w-0 overflow-hidden'">
 
-                        {{-- Profile Image/Initial --}}
+        <div
+            class="p-4 font-bold border-b border-neutral-200 dark:border-neutral-700 flex-shrink-0 text-neutral-900 dark:text-white flex items-center justify-between whitespace-nowrap">
+            <span>Users</span>
+            {{-- Close button for sidebar --}}
+            <button @click="sidebarOpen = false" class="text-neutral-500 hover:text-neutral-700">
+                ✕
+            </button>
+        </div>
+
+        <div
+            class="divide-y divide-neutral-200 dark:divide-neutral-800 overflow-y-auto flex-grow custom-scrollbar whitespace-nowrap w-80">
+            @foreach ($users as $user)
+                @php 
+                    $isSelected = $selectedUser && $selectedUser->id === $user->id; 
+                @endphp
+
+                {{-- Added @click="sidebarOpen = false" so it collapses instantly upon selection --}}
+                <div wire:click="selectUser({{ $user->id }})" @click="sidebarOpen = false"
+                    class="p-3 cursor-pointer flex items-center gap-3 transition-colors {{ $isSelected ? 'bg-blue-600 text-white font-semibold' : 'hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-800 dark:text-neutral-200' }}">
+
+                    {{-- Profile Image / Initial --}}
+                    <div class="flex-shrink-0 relative">
                         @if ($user->profile_image)
-                            <img src="{{ $user->profile_image }}" alt="{{ $user->name }}'s Profile Photo"
-                                class="w-15 h-15 lg:w-15 lg:h-15 aspect-ratio:auto object-cover rounded-full ring-4 ring-[#e2eafc] dark:ring-blue-300 shadow-xl mb-2">
+                            <img src="{{ $user->profile_image }}" alt="{{ $user->name }}"
+                                class="w-10 h-10 object-cover rounded-full ring-2 {{ $isSelected ? 'ring-white/40' : 'ring-neutral-200 dark:ring-neutral-700' }}">
                         @else
                             <div
-                                class="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center text-3xl font-bold shadow-xl mb-2">
+                                class="w-10 h-10 {{ $isSelected ? 'bg-white text-blue-600' : 'bg-blue-600 text-white' }} rounded-full flex items-center justify-center font-bold text-sm shadow-sm">
                                 {{ strtoupper(substr($user->name, 0, 1)) }}
                             </div>
                         @endif
 
-                        <div>{{ $user->name }}</div>
-                        <div class="text-xs">{{ $user->email }}</div>
+                        {{-- Unread Badge --}}
+                        @if (isset($unreadCounts[$user->id]) && $unreadCounts[$user->id] > 0)
+                            <span
+                                class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                                {{ $unreadCounts[$user->id] }}
+                            </span>
+                        @endif
                     </div>
-                @endforeach
-            </div>
+
+                    {{-- User Details --}}
+                    <div class="flex flex-col overflow-hidden">
+                        <span class="truncate text-sm">{{ $user->name }}</span>
+                        <span
+                            class="text-xs truncate {{ $isSelected ? 'text-blue-100' : 'text-neutral-500 dark:text-neutral-400' }}">{{ $user->email }}</span>
+                    </div>
+                </div>
+            @endforeach
         </div>
+    </div>
 
-        <div class="w-3/4 flex flex-col">
+    {{-- RIGHT SIDE: Chat Window (Takes up full width when sidebar is collapsed) --}}
+    <div class="flex-1 flex flex-col bg-white dark:bg-neutral-800 min-w-0 w-full transition-opacity duration-150"
+        wire:loading.class="opacity-50" wire:target="selectUser">
 
-            {{-- START OF CONDITIONAL CHAT DISPLAY: Only show chat if a user is selected --}}
-            @if ($selectedUser)
 
-                <div class="p-4 border-b bg-blue-500 text-[#e2eafc]">
-                    {{-- Profile Image Display with Initials Fallback --}}
+        @if ($selectedUser)
+            <div
+                class="p-4 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-between bg-neutral-50/50 dark:bg-neutral-800/50">
+                <div class="flex items-center gap-3">
+                    <button @click="sidebarOpen = !sidebarOpen"
+                        class="p-2 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-neutral-300 transition"
+                        title="Toggle Users List">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        </svg>
+                    </button>
+
                     @if ($selectedUser->profile_image)
-                        <img src="{{ $selectedUser->profile_image }}"
-                            alt="{{ $selectedUser->name }}'s Profile Photo"
-                            class="w-15 h-15 lg:w-15 lg:h-15 aspect-ratio:auto object-cover rounded-full ring-4 ring-[#e2eafc] dark:ring-blue-300 shadow-xl mb-2">
+                        <img src="{{ $selectedUser->profile_image }}" alt="{{ $selectedUser->name }}"
+                            class="w-10 h-10 object-cover rounded-full ring-2 ring-neutral-200 dark:ring-neutral-700">
                     @else
                         <div
-                            class="w-15 h-15 bg-blue-600 rounded-full flex items-center justify-center text-3xl font-bold shadow-xl mb-2">
+                            class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
                             {{ strtoupper(substr($selectedUser->name, 0, 1)) }}
                         </div>
                     @endif
-                    <div class="text-lg font-semibold">{{ $selectedUser->name }}</div>
-                    <div class="text-xs">{{ $selectedUser->email }}</div>
+                    <div>
+                        <div class="font-bold text-neutral-900 dark:text-white">{{ $selectedUser->name }}</div>
+                        <div class="text-xs text-neutral-500 dark:text-neutral-400">{{ $selectedUser->email }}</div>
+                    </div>
                 </div>
+            </div>
 
-                <div class="flex-1 p-4 overflow-y-auto custom-scrollbar bg-[#e2eafc] flex flex-col" id="messages-container" {{--
-                    THE FIX: When this element is initialized (appears in the DOM), scroll to bottom. --}} x-init="() => {     
-                                        const el = $el; 
-                                        // Wrap in requestAnimationFrame for reliability
-                                        requestAnimationFrame(() => { 
-                                            el.scrollTop = el.scrollHeight; 
-                                        });
-                                    }">
-                    @foreach ($messages as $message)
-                        <div class="flex w-full mb-2 {{ $message->sender_id === auth()->id() ? 'justify-end' : 'justify-start' }}">
+            {{-- Messages Container i ostali deo četa ostaje isti... --}}
+            <div class="flex-1 p-4 overflow-y-auto custom-scrollbar bg-neutral-50/30 dark:bg-neutral-900/30 flex flex-col space-y-2"
+                id="messages-container" x-init="() => { 
+                                const el = $el; 
+                                requestAnimationFrame(() => { 
+                                    el.scrollTop = el.scrollHeight; 
+                                });
+                            }">
 
+                @foreach ($messages as $message)
+                    <div class="flex w-full mb-1 {{ $message->sender_id === auth()->id() ? 'justify-end' : 'justify-start' }}">
+                        <div class="flex flex-col {{ $message->sender_id === auth()->id() ? 'items-end' : 'items-start' }}">
                             <div
-                                class="flex flex-col {{ $message->sender_id === auth()->id() ? 'items-end' : 'items-start' }}">
-                            <div class="max-w-xs px-4 py-2 rounded-2xl shadow {{ $message->sender_id === auth()->id() ? 'bg-blue-600' : 'bg-gray-500' }} text-white">
+                                class="max-w-md px-4 py-2 rounded-2xl shadow-sm text-sm {{ $message->sender_id === auth()->id() ? 'bg-blue-600 text-white' : 'bg-neutral-200 dark:bg-neutral-700 text-neutral-900 dark:text-white' }}">
                                 {{ $message->message }}
                             </div>
-
-                            @if($loop->last && $message->sender_id == auth()->id())
-                                <div id="message_read_{{ $message->id }}"
-                                    class="mt-1 flex items-center">
-                                    @if($message->read_at)
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="green" class="size-6 text-green-500">
-                                            <path fill-rule="evenodd"
-                                                d="M8.603 3.799A4.49 4.49 0 0 1 12 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 0 1 3.498 1.307 4.491 4.491 0 0 1 1.307 3.497A4.49 4.49 0 0 1 21.75 12a4.49 4.49 0 0 1-1.549 3.397 4.491 4.491 0 0 1-1.307 3.497 4.491 4.491 0 0 1-3.497 1.307A4.49 4.49 0 0 1 12 21.75a4.49 4.49 0 0 1-3.397-1.549 4.49 4.49 0 0 1-3.498-1.306 4.491 4.491 0 0 1-1.307-3.498A4.49 4.49 0 0 1 2.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 0 1 1.307-3.497 4.49 4.49 0 0 1 3.497-1.307Zm7.007 6.387a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    @else
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                            stroke="currentColor" class="size-6 text-gray-400">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                                        </svg>
-                                    @endif
-                                </div>
-                            @endif
-
-                            </div>
                         </div>
-                    @endforeach
-                </div>
-                <div id="typing-indicator" class="px-4 pb-1 text-xs bg-[#e2eafc] text-gray-400 italic"></div>
-                <form wire:submit.prevent="submit" class="p-4 border-t dark:bg-white flex items-center gap-2">
+                    </div>
+                @endforeach
+            </div>
 
-                    {{-- Input field: wire:model tracks the message content. .debounce.300ms prevents spamming the
-                    'userTyping' method --}}
-                    <input wire:model.live="newMessage" wire:keydown.debounce.300ms="userTyping" type="text"
-                        class="flex-1 border border-gray-300 text-black rounded-full px-4 py-2" placeholder="Type a message..." />
+            <div id="typing-indicator" class="px-4 py-1 text-xs bg-neutral-50 dark:bg-neutral-800 text-neutral-400 italic">
+            </div>
 
-                    <button type="submit" {{-- Disable button if the input field is empty (client-side prevention of empty
-                        requests) --}} @if(empty($newMessage)) disabled @endif {{-- Disable button while the submit action
-                        is loading --}} wire:loading.attr="disabled" wire:target="submit"
-                        class="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-full transition">
+            <form wire:submit.prevent="submit"
+                class="p-3 border-t border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 flex items-center gap-2">
+                <input wire:model.live="newMessage" wire:keydown.debounce.300ms="userTyping" type="text"
+                    class="flex-1 border border-neutral-300 dark:border-neutral-600 bg-transparent text-neutral-900 dark:text-white rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Type a message..." />
 
-                        {{-- Default text when not loading --}}
-                        <span wire:loading.remove wire:target="submit">
-                            Send
-                        </span>
+                <button type="submit" @if(empty($newMessage)) disabled @endif wire:loading.attr="disabled"
+                    wire:target="submit"
+                    class="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-sm px-4 py-2 rounded-full transition">
+                    Send
+                </button>
+            </form>
 
-                        {{-- Loading indicator when submitting --}}
-                        <span wire:loading wire:target="submit" class="flex items-center justify-center gap-2">
-                            {{-- SVG Spinner (Tailwind CSS animation classes are used for the spin effect) --}}
-                            <svg class="animate-spin text-white h-4 w-4 inline-block" xmlns="http://www.w3.org/2000/svg"
-                                fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
-                                </circle>
-                                <path class="opacity-75" fill="currentColor"
-                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                </path>
-                            </svg>
-                            Sending...
-                        </span>
+        @else
+            <div
+                class="flex-1 flex flex-col items-center justify-center text-neutral-400 bg-neutral-50/50 dark:bg-neutral-900/20 relative">
+                <div class="absolute top-4 left-4">
+                    <button @click="sidebarOpen = !sidebarOpen"
+                        class="p-2 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-neutral-300 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        </svg>
                     </button>
-                </form>
-
-            @else
-                {{-- Placeholder message when no user is selected --}}
-                <div class="flex-1 flex items-center justify-center text-gray-500 bg-gray-100">
-                    <p class="text-lg">Select a user to start chatting.</p>
                 </div>
-            @endif
-            {{-- END OF CONDITIONAL CHAT DISPLAY --}}
-        </div>
+                <p class="text-lg">Select a user to start chatting.</p>
+            </div>
+        @endif
+
     </div>
+</div>
 </div>
 @vite('resources/js/app.js')
 @script
@@ -165,6 +173,7 @@
         if (!combinedId) return;
 
         const channelName = `chat.${combinedId}`;
+        console.log('Pokušavam pretplatu na kanal:', channelName);
 
         // If the channel is already active, do nothing
         if (window.current_channel_subscription === channelName) {

@@ -6,8 +6,6 @@ use App\Livewire\Profile;
 use App\Livewire\Dashboard;
 use Laravel\Fortify\Features;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Broadcast;
-Broadcast::routes(['middleware' => ['web', 'auth']]);
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,6 +18,7 @@ Route::get('dashboard', Dashboard::class)
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
 
+    Volt::route('friends', 'friends')->name('friends');
     Volt::route('settings/profile', 'settings.profile')->name('profile.edit');
     Volt::route('settings/password', 'settings.password')->name('user-password.edit');
     Volt::route('settings/appearance', 'settings.appearance')->name('appearance.edit');

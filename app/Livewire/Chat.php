@@ -155,6 +155,7 @@ class Chat extends Component
 
         //  Update database Messages and broadcast read status
         $unreadMessages->each(function ($message) {
+            /** @var ChatMessage $message */
             $message->read_at = now();
             $message->save();
 

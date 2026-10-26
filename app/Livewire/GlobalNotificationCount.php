@@ -1,5 +1,4 @@
 <?php
-// app/Livewire/GlobalNotificationCount.php
 
 namespace App\Livewire;
 
@@ -15,13 +14,9 @@ class GlobalNotificationCount extends Component
 
     private function loadGlobalCount()
     {
-        // Get all unread messages where user is receiver
-        $unreadCounts = ChatMessage::selectRaw('count(*) as count')
-            ->where('receiver_id', Auth::id())
+        return ChatMessage::where('receiver_id', Auth::id())
             ->whereNull('read_at')
-            ->value('count'); // Take only count
-            
-        return $unreadCounts ?? 0;
+            ->count();
     }
 
     public function mount()
@@ -30,29 +25,16 @@ class GlobalNotificationCount extends Component
         $this->count = $this->loadGlobalCount();
     }
     
-    // Listen to the broadcast of message sent and execute the method on it
-    #[On('echo-private:chat.{loginID},MessageSent')]
-    public function handleNewMessageBroadcast(array $message)
+    public function incrementCount(array $message)
     {
-        $senderId = $message['sender_id'];
-        
-        // Check if message is read already if chat is opened
-        $messageIsRead = ChatMessage::where('id', $message['id'])
-            ->whereNotNull('read_at')
-            ->exists();
-            
-        // If message isnt read increment the count
-        if ($senderId !== Auth::id() && !$messageIsRead) {
-            
-            // Define the count again
+        if (isset($message['sender_id']) && (int) $message['sender_id'] !== (int) Auth::id()) {
             $this->count = $this->loadGlobalCount(); 
         }
     }
-    // Listener connected to chat.php when user is selected for updating globalcount
+
     #[On('chatRead')]
     public function handleChatRead()
     {
-        // Ponovo učitajte ukupan brojač iz baze
         $this->count = $this->loadGlobalCount();
     }
 
